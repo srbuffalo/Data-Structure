@@ -1,0 +1,134 @@
+Description:
+  Given an array, e.g, a = [1,3,5,7,9,11] 
+    1. get sum of range, (e.g, from index 0 to index 2) ---------O(log(n));
+    2. change an element in a specific index  ---------------O(log(n))     O(1) for changing in the array, O(log(n)) for applying the change to whole tree;
+
+visual example:
+  
+
+
+
+class Node:
+    def __init__(self,val):
+        self.val = val
+        self.left = None
+        self.right = None
+        
+class Tree:
+    
+    def __init__(self,root,arr):
+        self.root = root
+        self.arr = arr
+    
+    # update var at index of self.arr and applied to whole tree
+    def updateTree(self,node,index,l,r,diff):
+        if l == r:
+            node.val += diff
+            return
+        else:
+            node.val += diff
+            m = l + (r - l) // 2
+            if index <= m:
+                self.updateTree(node.left,index,l,m,diff)
+            else:
+                self.updateTree(node.right,index,m+1,r,diff)
+    
+    # update value change to the tree
+    def update(self,index,val):
+        if 0 <=index < len(self.arr):
+            diff = val - self.arr[index]
+            self.arr[index] = val
+            l = 0
+            r = len(self.arr) - 1
+            self.updateTree(self.root,index,l,r,diff)
+    
+    # get sum of arr[left:right+1]
+    def getSum(self,left,right):
+        if left > right:
+            left,right = right,left
+        if left < 0 or right >= len(self.arr):
+            return -1
+        if left == right:
+            return self.arr[left]
+        return self.findSum(self.root,left,right,0,len(self.arr)-1)
+    
+    # go through tree and get sum of arr[left:right+1]
+    def findSum(self,node,left,right,l,r):
+        Sum = 0
+        # if such sum is already existed in tree,return it directly
+        if left == l and right == r:
+            return node.val
+        m = l + (r-l)//2
+        if left > m:
+            Sum = self.findSum(node.right,left,right,m+1,r)
+        else:
+            if left == m:
+                L = self.findSum(node.left,left,left,l,m)
+                R = self.findSum(node.right,left+1,right,m+1,r)
+                Sum = L + R
+            else:
+                if right <= m:
+                    Sum = self.findSum(node.left,left,right,l,m)
+                else:
+                    L = self.findSum(node.left,left,m,l,m)
+                    R = self.findSum(node.right,m+1,right,m+1,r)
+                    Sum = L + R
+        return Sum
+                
+    
+    def bfs(self):
+        r = [self.root]
+        Nodes = [[]]
+        while r:
+            Next = []
+            while r:
+                s = r.pop()
+                Nodes[-1].append(s.val)
+                for each in [s.left,s.right]:
+                    if each:
+                        Next.append(each)
+            r = Next[::-1]
+            if r:
+                Nodes.append([])
+        for each in Nodes:
+            print(each)
+            
+# construct segmentTree
+def segmentTree(arr):
+    s = None
+    if not arr:
+        return None
+    if len(arr) == 1:
+        return Node(arr[0])
+    else:
+        m = (len(arr) + 1)//2
+        left = segmentTree(arr[:m])
+        right = segmentTree(arr[m:])
+        if left and right:
+            s = Node(left.val + right.val)
+            s.left = left
+            s.right = right
+        elif left:
+            s = Node(left.val)
+            s.left = left
+        elif right:
+            s = Node(right.val)
+            s.right = right
+        return s
+
+S = segmentTree(a)
+T = Tree(S,a)
+print(T.arr)
+T.bfs()
+print(T.getSum(2,5))
+
+print('--------------')
+
+T.update(2,10)
+print(T.arr)
+T.bfs()
+print(T.getSum(2,5))
+
+print('--------------')
+
+    
