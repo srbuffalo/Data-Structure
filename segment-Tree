@@ -3,6 +3,10 @@ Description:
     1. get sum of range, (e.g, from index 0 to index 2) ---------O(log(n));
     2. change an element in a specific index  ---------------O(log(n))     O(1) for changing in the array, O(log(n)) for applying the change to whole tree;
 
+Current Implementation:  
+    1.Get sum of range;
+    2.change var in a specific index and applied to whole tree;
+    3.BFS to see the change;
 
 
 class Node:
