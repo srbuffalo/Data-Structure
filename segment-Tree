@@ -2,9 +2,8 @@ Description:
   Given an array, e.g, a = [1,3,5,7,9,11] 
     1. get sum of range, (e.g, from index 0 to index 2) ---------O(log(n));
     2. change an element in a specific index  ---------------O(log(n))     O(1) for changing in the array, O(log(n)) for applying the change to whole tree;
-
 visual example:
-  
+https://github.com/srbuffalo/Data-Structure/blob/main/README.md
 
 
 
